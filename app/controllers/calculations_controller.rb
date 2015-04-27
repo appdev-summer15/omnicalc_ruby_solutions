@@ -10,14 +10,46 @@ class CalculationsController < ApplicationController
     # The special word the user input is in the string @special_word.
     # ================================================================================
 
+    # Character count with spaces
+    # ===========================
+    @character_count_with_spaces = @text.length
 
-    @character_count_with_spaces = "Replace this string with your answer."
 
-    @character_count_without_spaces = "Replace this string with your answer."
+    # Character count without spaces
+    # ==============================
 
-    @word_count = "Replace this string with your answer."
+    # Removing whitespace from string:
+    text_without_spaces = @text.gsub(" ",  "")
+    text_without_newlines = text_without_spaces.gsub("\n", "")
+    text_without_carriage_returns = text_without_newlines.gsub("\r", "")
+    text_without_tabs = text_without_carriage_returns.gsub("\t", "")
 
-    @occurrences = "Replace this string with your answer."
+    # Alternatively, @text.gsub(/\s+/, "") would remove all whitespace at once.
+
+    @character_count_without_spaces = text_without_tabs.length
+
+    # Another alternative would be to count the occurrences of each whitespace
+    #   character, then subtract that from the total length:
+    # @text.length - @text.count(" ") - @text.count("\n") - etc
+
+    # Word Count
+    # ==========
+
+    array_of_words = @text.split
+    @word_count = array_of_words.count
+
+    # Occurrences
+    # ===========
+
+    text_without_punctuation = @text.gsub(".", "").gsub(",", "").gsub("!", "").gsub("?", "").gsub(":", "").gsub(";", "").gsub("/", "")
+
+    # Alternatively, @text.gsub(/[^a-z0-9\s]/i, '') would remove anything except letters, digits, and whitespace all at once.
+
+    downcased_text = text_without_punctuation.downcase
+
+    clean_word_array = downcased_text.split
+
+    @occurrences = clean_word_array.count(@special_word.downcase)
   end
 
   def loan_payment
@@ -32,7 +64,10 @@ class CalculationsController < ApplicationController
     # The principal value the user input is in the decimal @principal.
     # ================================================================================
 
-    @monthly_payment = "Replace this string with your answer."
+    rate = @apr / 100 / 12
+    nper = @years * 12
+
+    @monthly_payment = (rate * @principal)/(1 - (1 + rate)**-nper)
   end
 
   def time_between
@@ -48,12 +83,12 @@ class CalculationsController < ApplicationController
     #   number of seconds as a result.
     # ================================================================================
 
-    @seconds = "Replace this string with your answer."
-    @minutes = "Replace this string with your answer."
-    @hours = "Replace this string with your answer."
-    @days = "Replace this string with your answer."
-    @weeks = "Replace this string with your answer."
-    @years = "Replace this string with your answer."
+    @seconds = @ending - @starting
+    @minutes = @seconds / 1.minute
+    @hours = @seconds / 1.hour
+    @days = @seconds / 1.day
+    @weeks = @seconds / 1.week
+    @years = @seconds / 1.year
   end
 
   def descriptive_statistics
@@ -64,26 +99,60 @@ class CalculationsController < ApplicationController
     # The numbers the user input are in the array @numbers.
     # ================================================================================
 
-    @sorted_numbers = "Replace this string with your answer."
+    @sorted_numbers = @numbers.sort
 
-    @count = "Replace this string with your answer."
+    @count = @numbers.count
 
-    @minimum = "Replace this string with your answer."
+    @minimum = @numbers.min
 
-    @maximum = "Replace this string with your answer."
+    @maximum = @numbers.max
 
-    @range = "Replace this string with your answer."
+    @range = @maximum - @minimum
 
-    @median = "Replace this string with your answer."
+    # Median
+    # ======
+    if @count.odd?
+      @median = @sorted_numbers[@count / 2]
+    else
+      left_of_middle = @sorted_numbers[(@count / 2) - 1]
+      right_of_middle = @sorted_numbers[(@count / 2)]
+      @median = (left_of_middle + right_of_middle) / 2
+    end
 
-    @sum = "Replace this string with your answer."
 
-    @mean = "Replace this string with your answer."
+    @sum = @numbers.sum
 
-    @variance = "Replace this string with your answer."
+    @mean = @sum / @count
 
-    @standard_deviation = "Replace this string with your answer."
+    # Variance
+    # ========
+    squared_differences = []
 
-    @mode = "Replace this string with your answer."
+    @numbers.each do |num|
+      difference = num - @mean
+      squared_difference = difference ** 2
+      squared_differences.push(squared_difference)
+    end
+
+    @variance = squared_differences.sum / @count
+
+
+    @standard_deviation = Math.sqrt(@variance)
+
+    # Mode
+    # ====
+
+    leader = nil
+    leader_count = 0
+
+    @numbers.each do |num|
+      occurrences = @numbers.count(num)
+      if occurrences > leader_count
+        leader = num
+        leader_count = occurrences
+      end
+    end
+
+    @mode = leader
   end
 end
