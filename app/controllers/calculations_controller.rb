@@ -4,11 +4,11 @@ class CalculationsController < ApplicationController
     @text = params[:user_text]
     @special_word = params[:user_word]
 
-    # ================================================================================
+    # ==========================================================================
     # Your code goes below.
     # The text the user input is in the string @text.
     # The special word the user input is in the string @special_word.
-    # ================================================================================
+    # ==========================================================================
 
     # Character count with spaces
     # ===========================
@@ -41,11 +41,19 @@ class CalculationsController < ApplicationController
     # Occurrences
     # ===========
 
-    text_without_punctuation = @text.gsub(".", "").gsub(",", "").gsub("!", "").gsub("?", "").gsub(":", "").gsub(";", "").gsub("/", "")
+    text_without_periods = @text.gsub(".", "")
+    text_without_commas = text_without_periods.gsub(",", "")
+    text_without_exclamation_points = text_without_commas.gsub("!", "")
+    text_without_question_marks = text_without_exclamation_points.gsub("?", "")
+    text_without_colons = text_without_exclamation_points.gsub(":", "")
+    text_without_semicolons = text_without_colons.gsub(";", "")
+    text_without_forward_slashes = text_without_semicolons.gsub("/", "")
+    text_without_back_slashes = text_without_forward_slashes.gsub("\\", "")
 
-    # Alternatively, @text.gsub(/[^a-z0-9\s]/i, '') would remove anything except letters, digits, and whitespace all at once.
+    # Alternatively, @text.gsub(/[^a-z0-9\s]/i, '') would remove anything
+    #   except letters, digits, and whitespace all at once.
 
-    downcased_text = text_without_punctuation.downcase
+    downcased_text = text_without_back_slashes.downcase
 
     clean_word_array = downcased_text.split
 
@@ -57,12 +65,12 @@ class CalculationsController < ApplicationController
     @years = params[:number_of_years].to_i
     @principal = params[:principal_value].to_f
 
-    # ================================================================================
+    # ==========================================================================
     # Your code goes below.
     # The annual percentage rate the user input is in the decimal @apr.
     # The number of years the user input is in the integer @years.
     # The principal value the user input is in the decimal @principal.
-    # ================================================================================
+    # ==========================================================================
 
     rate = @apr / 100 / 12
     nper = @years * 12
@@ -74,14 +82,14 @@ class CalculationsController < ApplicationController
     @starting = Chronic.parse(params[:starting_time])
     @ending = Chronic.parse(params[:ending_time])
 
-    # ================================================================================
+    # ==========================================================================
     # Your code goes below.
     # The start time is in the Time @starting.
     # The end time is in the Time @ending.
     # Note: Ruby stores Times in terms of seconds since Jan 1, 1970.
     #   So if you subtract one time from another, you will get an integer
     #   number of seconds as a result.
-    # ================================================================================
+    # ==========================================================================
 
     @seconds = @ending - @starting
     @minutes = @seconds / 1.minute
@@ -94,10 +102,10 @@ class CalculationsController < ApplicationController
   def descriptive_statistics
     @numbers = params[:list_of_numbers].gsub(',', '').split.map(&:to_f)
 
-    # ================================================================================
+    # ==========================================================================
     # Your code goes below.
     # The numbers the user input are in the array @numbers.
-    # ================================================================================
+    # ==========================================================================
 
     @sorted_numbers = @numbers.sort
 
