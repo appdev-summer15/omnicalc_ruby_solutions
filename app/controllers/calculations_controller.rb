@@ -41,14 +41,14 @@ class CalculationsController < ApplicationController
     # Occurrences
     # ===========
 
-    text_without_periods = @text.gsub(".", "")
-    text_without_commas = text_without_periods.gsub(",", "")
+    text_without_periods            = @text.gsub(".", "")
+    text_without_commas             = text_without_periods.gsub(",", "")
     text_without_exclamation_points = text_without_commas.gsub("!", "")
-    text_without_question_marks = text_without_exclamation_points.gsub("?", "")
-    text_without_colons = text_without_exclamation_points.gsub(":", "")
-    text_without_semicolons = text_without_colons.gsub(";", "")
-    text_without_forward_slashes = text_without_semicolons.gsub("/", "")
-    text_without_back_slashes = text_without_forward_slashes.gsub("\\", "")
+    text_without_question_marks     = text_without_exclamation_points.gsub("?", "")
+    text_without_colons             = text_without_exclamation_points.gsub(":", "")
+    text_without_semicolons         = text_without_colons.gsub(";", "")
+    text_without_forward_slashes    = text_without_semicolons.gsub("/", "")
+    text_without_back_slashes       = text_without_forward_slashes.gsub("\\", "")
 
     # Alternatively, @text.gsub(/[^a-z0-9\s]/i, '') would remove anything
     #   except letters, digits, and whitespace all at once.
@@ -92,8 +92,8 @@ class CalculationsController < ApplicationController
     # ==========================================================================
 
     @seconds = @ending - @starting
-    @minutes = @seconds / 1.minute
-    @hours = @seconds / 1.hour
+    @minutes = @seconds / 1.minute # 1.minute is just shorthand for 1 * 60
+    @hours = @seconds / 1.hour # 1.hour is just shorthand for 1 * 3600
     @days = @seconds / 1.day
     @weeks = @seconds / 1.week
     @years = @seconds / 1.year
